@@ -5,10 +5,9 @@ const UserSchema = mongoose.Schema({
     lname : {type : String, required : true},
     email : {type : String, required : true, unique : true},
     password : {type : String, required : true},
-    rePassword : {type : String, required : true},
     isVerfied : {type : Boolean, default : false},
 })
 
-const UserModel = new mongoose.model('users', UserSchema)
+const UserModel = mongoose.model('users', UserSchema)
 
 export default UserModel

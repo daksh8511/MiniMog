@@ -51,7 +51,7 @@ const ProductView = () => {
 
   return (
     <Wrapper className="p-4">
-      <div className="grid grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 min-md:grid-cols-2 gap-10">
         <div className="leftSide">
           <Swiper
             style={{
@@ -126,6 +126,7 @@ const ProductView = () => {
                     }
                   />
                 </div>
+                <span className="text-red-500">{filterId[0].stock == 0 ? "Out Of Stock" : ""}</span>
                 <div className="space-y-4">
                   <WhiteButton btnTitle={"ADD TO CART"} />
                   <BlackButton btnTitle={"BUY IT NOW"} />
@@ -167,7 +168,11 @@ const ProductView = () => {
       <div className="mt-10">
         <h2 className="text-center text-3xl">You Might Also Like</h2>
         <Swiper
-          slidesPerView={3}
+           breakpoints={{
+            320: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
           spaceBetween={30}
           pagination={{
             clickable: true,

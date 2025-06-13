@@ -58,7 +58,7 @@ const SignUp = () => {
         <form
           action=""
           onSubmit={submitForm}
-          className="flex flex-col justify-center w-100 m-auto space-y-4"
+          className="flex flex-col justify-center w-100 pr-2 min-md:pr-0  m-auto space-y-4"
         >
           <input
             type="text"

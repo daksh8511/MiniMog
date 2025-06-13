@@ -83,17 +83,19 @@ const ProductsMenu = () => {
               {watches.map((products, i) => {
                 return (
                     <SwiperSlide>
+                      <Link to={`/product_view/${products._id}`}>
                       <div className="h-30">
                         <img
                           src={products.product_images}
                           className="h-full m-auto"
                           alt=""
-                        />
+                          />
                       </div>
                       <h2 className="line-clamp-2 my-2">
                         {products.product_name}
                       </h2>
                       <span>₹{products.price}</span>
+                          </Link>
                     </SwiperSlide>
                 );
               })}

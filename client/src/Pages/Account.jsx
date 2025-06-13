@@ -1,4 +1,3 @@
-import React from "react";
 import Direction from "../Components/Direction/Direction";
 import { Link } from "react-router-dom";
 
@@ -13,7 +12,7 @@ const Account = () => {
       <div className="my-5">
         <Direction />
       </div>
-      <div className="grid grid-cols-2 gap-4 items-center">
+      <div className="grid grid-cols-1 min-md:grid-cols-2 gap-4 items-center">
         <div>
           <h2 className="text-3xl mb-4">Log In</h2>
           <form action="" onSubmit={submitForm} className="flex flex-col gap-4">

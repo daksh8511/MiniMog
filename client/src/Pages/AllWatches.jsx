@@ -9,8 +9,7 @@ import { Link } from "react-router-dom";
 const AllWatches = () => {
   const [allWatches, setAllWatches] = useState([]);
   const [value, setValue] = useState([0, 200]);
-
-  const [activeBar, setActiveBar] = useState("twobar");
+  const [activeBar, setActiveBar] = useState("threebar");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -24,15 +23,22 @@ const AllWatches = () => {
     setAllWatches(final.products);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const getIdealFor = allWatches.map((ideadFor) => ideadFor.ideal_for);
 
   const filteredIdealfor = getIdealFor.filter((idealFor, index) => {
     return getIdealFor.indexOf(idealFor) === index;
   });
+
+  const getTypeOfGood = allWatches.map((watchType) => watchType.typeOfGood);
+
+  const filterTypeOfGood = getTypeOfGood.filter((watch, index) => {
+    return getTypeOfGood.indexOf(watch) === index;
+  });
+  
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   if (allWatches.length == 0) {
     return "LOADING....";
@@ -60,16 +66,33 @@ const AllWatches = () => {
           <h2 className="mb-1">IDEAL FOR</h2>
           {filteredIdealfor.map((ideals, i) => {
             return (
-              <div className="flex gap-1">
-                <input type="checkbox" id="checkbox" />
-                <label htmlFor="checkbox">{ideals}</label>
+              <div className="flex gap-1" key={i}>
+                <input
+                  type="checkbox"
+                  id={`idealForCheckBox-${i}`}
+                  value={ideals}
+                />
+                <label htmlFor={`idealForCheckBox-${i}`}>{ideals}</label>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* WATCH TYPE */}
+        <div className="mt-3">
+          <h2 className="mb-1">WATCH TYPE</h2>
+          {filterTypeOfGood.map((des, i) => {
+            return (
+              <div key={i} className="flex gap-1">
+                <input type="checkbox" id={`watchTypeCheckBox${i}`} value={des} />
+                <label htmlFor={`watchTypeCheckBox${i}`}>{des}</label>
               </div>
             );
           })}
         </div>
       </div>
       <div className="w-3/4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-8">
           <div className="flex">
             <h2>Price : </h2>
             <select name="" id="">
@@ -108,10 +131,21 @@ const AllWatches = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 mt-10 gap-10">
+        <div
+          className={`${
+            activeBar == "twobar"
+              ? "grid grid-cols-2 gap-5"
+              : activeBar == "threebar"
+              ? "grid grid-cols-3 gap-5"
+              : activeBar == "fourbar"
+              ? "grid grid-cols-4 gap-5"
+              : ""
+          }`}
+        >
           {allWatches.map((watches, i) => {
             return (
               <Link
+                key={i}
                 to={`/product_view/${watches._id}`}
                 className="text-center duration-200 hover:shadow-xl/30 rounded-2xl"
               >
