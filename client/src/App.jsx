@@ -10,8 +10,10 @@ import Account from './Pages/Account'
 import ProductView from './Pages/ProductView'
 import AllWatches from './Pages/AllWatches'
 import FilterWatch from './Pages/FilterWatch'
+import OTPBox from './Pages/OTPBox'
 
 const App = () => {
+
   return (
     <div className='container relative'>
       <Header />
@@ -21,6 +23,7 @@ const App = () => {
         <Route path='/wishlist' element={<Wishlist />} />
         <Route path='/account' element={<Account />} />
         <Route path='/signup' element={<SignUp />} />
+        <Route path='/otp' element={<OTPBox />} />
         <Route path='/product_view/:id' element={<ProductView />} />
         <Route path='/all_watches' element={<AllWatches />} />
         <Route path='/filterWatch/:watchtype' element={<FilterWatch />} />

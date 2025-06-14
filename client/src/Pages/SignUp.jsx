@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Direction from "../Components/Direction/Direction";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [fname, setFName] = useState("");
@@ -11,7 +11,7 @@ const SignUp = () => {
 
   const navigation = useNavigate();
 
-  const [userData, setUserData] = useState([])
+  const [userData, setUserData] = useState([]);
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -42,9 +42,10 @@ const SignUp = () => {
       .then((succ) => alert("User Login Successfully"))
       .catch((err) => console.log(err));
 
-    navigation("/account");
-  };
+    localStorage.setItem("email", JSON.stringify(email))
 
+    navigation("/otp");
+  };
 
   return (
     <div className="p-4">
@@ -104,9 +105,7 @@ const SignUp = () => {
             Sign up for early Sale access plus tailored new arrivals, trends and
             promotions. To opt out, click unsubscribe in our emails.
           </p>
-          <button type="submit" className="bg-black text-white py-2">
-            Sign Up
-          </button>
+          <button type="submit" className="p-2 bg-black text-white cursor-pointer">Sign Up</button>
         </form>
       </div>
     </div>

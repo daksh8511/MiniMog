@@ -1,13 +1,25 @@
 import mongoose from "mongoose";
 
-const UserSchema = mongoose.Schema({
-    fname : {type : String, required : true},
-    lname : {type : String, required : true},
-    email : {type : String, required : true, unique : true},
-    password : {type : String, required : true},
-    isVerfied : {type : Boolean, default : false},
-})
+const UserSchema = new mongoose.Schema(
+  {
+    fname: { type: String, required: true },
+    lname: { type: String, required: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: [/^\S+@\S+\.\S+$/, "Invalid email address"],
+    },
+    password: { type: String, required: true, minlength: 8 },
+    isVerified: { type: Boolean, default: false },
+    cart: { type: [String] },
+    otp: { type: Number },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const UserModel = mongoose.model('users', UserSchema)
+const UserModel = mongoose.model("users", UserSchema);
 
-export default UserModel
+export default UserModel;
