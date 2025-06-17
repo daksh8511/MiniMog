@@ -11,6 +11,7 @@ import ProductView from './Pages/ProductView'
 import AllWatches from './Pages/AllWatches'
 import FilterWatch from './Pages/FilterWatch'
 import OTPBox from './Pages/OTPBox'
+import User from './Pages/User/User'
 
 const App = () => {
 
@@ -27,6 +28,7 @@ const App = () => {
         <Route path='/product_view/:id' element={<ProductView />} />
         <Route path='/all_watches' element={<AllWatches />} />
         <Route path='/filterWatch/:watchtype' element={<FilterWatch />} />
+        <Route path='/user/:user' element={<User />} />
       </Routes>
       <Footer />
     </div>

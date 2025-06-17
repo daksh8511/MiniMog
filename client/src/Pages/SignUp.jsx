@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import Direction from "../Components/Direction/Direction";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [fname, setFName] = useState("");
@@ -10,8 +10,6 @@ const SignUp = () => {
   const [rePassword, setRePassword] = useState("");
 
   const navigation = useNavigate();
-
-  const [userData, setUserData] = useState([]);
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -26,7 +24,7 @@ const SignUp = () => {
       return;
     }
 
-    const response = await fetch("http://127.0.0.1:4000/api/users/signup", {
+    fetch("http://127.0.0.1:4000/api/users/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -16,12 +16,18 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 
 import watch from "/assets/watch.jpg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegularMenu = () => {
   const BgRef = useRef('')
   const [isCartBarOpen, setCartBar] = useState(false);
   const navigation = useNavigate()
+
+  const [myemail, setEmail] = useState('')
+
+  const isLogin = JSON.parse(localStorage.getItem('login'))
+
+  console.log(isLogin == null) 
 
   const openCartBar = () => {
     setCartBar(true);
@@ -50,7 +56,11 @@ const RegularMenu = () => {
           <img className="w-full" src={Assets.logo} alt="" />
         </div>
         <div className="flex gap-5 items-center *:text-xl">
+          {isLogin == null ? 
           <FaRegUser className="cursor-pointer" onClick={() => navigation('/account')} />
+          :
+          <Link to={`user/${isLogin}`}>{isLogin}</Link>
+          }
           <FaRegHeart className="cursor-pointer" onClick={() => navigation('/wishlist')} />
           <div className="relative">
             <span className="absolute -right-3 -top-3 bg-black h-5 w-5 rounded-full text-white text-center text-sm">

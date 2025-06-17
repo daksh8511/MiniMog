@@ -1,26 +1,26 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const OTPBox = () => {
   const [otp, setOTP] = useState(0);
-  const [user, setUser] = useState([])
-  const navigation = useNavigate()
+  const [user, setUser] = useState([]);
+  const navigation = useNavigate();
 
-  const getEmail = JSON.parse(localStorage.getItem('email'))
+  const getEmail = JSON.parse(localStorage.getItem("email"));
 
-  
   const sendOtp = async () => {
-    const response = await fetch(`http://127.0.0.1:4000/api/users/getPerson?getEmail=${getEmail}`)
-    const final = await response.json()
-    setUser(final.data)    
+    const response = await fetch(
+      `http://127.0.0.1:4000/api/users/getPerson?getEmail=${getEmail}`
+    );
+    const final = await response.json();
+    setUser(final.data);
 
-    if(user[0].otp == otp){
-      alert("OTP Verified")
-      navigation('/')
-    }else{
-      alert("OTP are Not match")
+    if (user[0].otp == otp) {
+      alert("OTP Verified");
+      navigation("/");
+    } else {
+      alert("OTP are Not match");
     }
   };
 
@@ -28,7 +28,6 @@ const OTPBox = () => {
     e.preventDefault();
     sendOtp();
   };
-
 
   return (
     <Wrapper className="p-4">
@@ -40,7 +39,7 @@ const OTPBox = () => {
           onSubmit={handleOTP}
         >
           <input
-            type="text"
+            type="number"
             placeholder="Enter OTP"
             value={otp}
             onChange={(e) => setOTP(e.target.value)}
