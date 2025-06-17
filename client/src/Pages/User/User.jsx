@@ -1,6 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+
 const User = () => {
 //   const [user, setUser] = useState([]);
 
