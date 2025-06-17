@@ -5,6 +5,7 @@ import { ConnectDB } from './config/mongodb.js'
 import ProductRoutes from './routes/ProductRoutes.js'
 import UserController from './controller/UserController.js'
 import FilterProductRoutes from './routes/FilterProductRoutes.js'
+import cookieParser from 'cookie-parser'
 
 const app = express()
 
@@ -12,6 +13,7 @@ ConnectDB()
 
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser())
 
 app.use('/api/post-product', ProductRoutes)
 app.use('/api/users', UserController)

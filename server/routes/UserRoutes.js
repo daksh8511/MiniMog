@@ -2,6 +2,8 @@ import transporter from "../config/nodemailer.js";
 import UserModel from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
 
+import jwt from "jsonwebtoken";
+
 export const SignUp = async (req, res) => {
   const { fname, lname, email, password } = req.body;
 
@@ -46,16 +48,10 @@ export const SignUp = async (req, res) => {
 
 export const GetAllUser = async (req, res) => {
   try {
-    const users = await UserModel.find({});
-    await users.save();
-
-    return res.json({
-      success: true,
-      message: "Fetch All Users",
-      users: users,
-    });
+    const Users = await UserModel.find();
+    return res.json({ success: true, users: Users });
   } catch (error) {
-    return res.json({ succes: false, message: error });
+    return res.json({ success: false, message: error });
   }
 };
 
@@ -66,6 +62,45 @@ export const GetPerson = async (req, res) => {
     const User = await UserModel.find({ email: getEmail });
 
     return res.json({ success: true, data: User });
+  } catch (error) {
+    return res.json({ success: false, message: error });
+  }
+};
+
+export const SignIn = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.json({ success: false, message: "Enter Email or password" });
+  }
+
+  try {
+    const User = await UserModel.findOne({ email });
+
+    if (!User) {
+      return res.json({ success: false, message: "User Not Registered" });
+    }
+
+    const isMatched = await bcrypt.compare(password, User.password);
+
+    if (!isMatched) {
+      return res.json({ success: false, message: "password not matched" });
+    }
+
+    const token = jwt.sign({ id: User._id }, process.env.SECRET_KEY, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "prodcution",
+      sameSite: process.env.NODE_ENV === "prodcution" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    await User.updateOne({ isSignIn: true });
+
+    return res.json({ success: true, message: "Login Successfully" });
   } catch (error) {
     return res.json({ success: false, message: error });
   }
