@@ -28,7 +28,7 @@ const ManageAddress = () => {
 
     const data = await response.json();
 
-    console.log(data);
+    setAddressBox(false)
   };
 
   const fetchAddress = async () => {

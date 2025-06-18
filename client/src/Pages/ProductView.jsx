@@ -45,6 +45,29 @@ const ProductView = () => {
     (cate) => cate.typeOfGood == filterId[0].typeOfGood
   );
 
+  const isLogin = JSON.parse(localStorage.getItem("isLogin"));
+
+  const addCart = async (product) => {
+    console.log(isLogin);
+
+    if (isLogin) {
+      const getEmail = JSON.parse(localStorage.getItem("email"));
+      const response = await fetch("http://127.0.0.1:4000/api/cart/addToCart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: getEmail, productsId: product._id }),
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+    } else {
+      return alert("Login First");
+    }
+  };
+
   if (filterId.length == 0) {
     return "Loading...";
   }
@@ -126,9 +149,16 @@ const ProductView = () => {
                     }
                   />
                 </div>
-                <span className="text-red-500">{filterId[0].stock == 0 ? "Out Of Stock" : ""}</span>
+                <span className="text-red-500">
+                  {filterId[0].stock == 0 ? "Out Of Stock" : ""}
+                </span>
                 <div className="space-y-4">
-                  <WhiteButton btnTitle={"ADD TO CART"} />
+                  <button
+                    className="w-full"
+                    onClick={() => addCart(filterId[0])}
+                  >
+                    <WhiteButton btnTitle={"ADD TO CART"} />
+                  </button>
                   <BlackButton btnTitle={"BUY IT NOW"} />
                 </div>
                 <hr className="my-5 border-gray-300" />
@@ -168,7 +198,7 @@ const ProductView = () => {
       <div className="mt-10">
         <h2 className="text-center text-3xl">You Might Also Like</h2>
         <Swiper
-           breakpoints={{
+          breakpoints={{
             320: { slidesPerView: 1 },
             768: { slidesPerView: 2 },
             1024: { slidesPerView: 3 },

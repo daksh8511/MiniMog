@@ -28,6 +28,7 @@ const PersonalInformation = () => {
     });
 
     localStorage.removeItem('login')
+    localStorage.removeItem('isLogin')
     navigation('/')
   };
 
@@ -37,6 +38,7 @@ const PersonalInformation = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('login')
+    localStorage.setItem('isLogin', JSON.stringify(false))
     navigation('/')
   }
 

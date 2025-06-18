@@ -38,6 +38,7 @@ const Account = () => {
       alert("Log In Successfully")
 
       localStorage.setItem('login', JSON.stringify(email))
+      localStorage.setItem('isLogin', JSON.stringify(true))
       navigation('/')
     }
 

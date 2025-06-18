@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa6";
@@ -19,25 +19,54 @@ import watch from "/assets/watch.jpg";
 import { Link, useNavigate } from "react-router-dom";
 
 const RegularMenu = () => {
-  const BgRef = useRef('')
+  const BgRef = useRef("");
   const [isCartBarOpen, setCartBar] = useState(false);
-  const navigation = useNavigate()
+  const navigation = useNavigate();
 
-  const [myemail, setEmail] = useState('')
+  const isLogin = JSON.parse(localStorage.getItem("login"));
 
-  const isLogin = JSON.parse(localStorage.getItem('login'))
+  const [user, setUser] = useState('')
+  const [allProducts, setAllProducts] = useState([])
 
   const openCartBar = () => {
     setCartBar(true);
-    BgRef.current.style.background = "#37373780"
+    BgRef.current.style.background = "#37373780";
     BgRef.current.style.height = "100vh";
   };
 
   const closeCartBar = () => {
     setCartBar(false);
-    BgRef.current.style.background = ""
+    BgRef.current.style.background = "";
     BgRef.current.style.height = "0vh";
   };
+
+  const firstLogin = () => {
+    setCartBar(false)
+    BgRef.current.style.background = "";
+    BgRef.current.style.height = "0vh";
+    navigation('/account')
+  }
+
+  const fetchUser = async () => {
+    const response = await fetch('http://127.0.0.1:4000/api/users/getPerson?getEmail=daxsathwara102@gmail.com')
+    const final = await response.json()
+    setUser(final.data)
+  }
+
+  const fetchProducts = async () => {
+    const response = await fetch('http://127.0.0.1:4000/api/post-product/product-getting')
+    const final = await response.json()
+    setAllProducts(final.products)
+  }
+
+  const getProductsById = user[0]?.cart.filter((fil) => fil == allProducts)
+  console.log(getProductsById)
+
+  useEffect(() => {
+    fetchUser()
+    fetchProducts()
+  }, [])
+
 
   return (
     <Wrapper className="hidden min-md:block">
@@ -54,12 +83,18 @@ const RegularMenu = () => {
           <img className="w-full" src={Assets.logo} alt="" />
         </div>
         <div className="flex gap-5 items-center *:text-xl">
-          {isLogin == null ? 
-          <FaRegUser className="cursor-pointer" onClick={() => navigation('/account')} />
-          :
-          <Link to={`user/${isLogin}`}>{isLogin}</Link>
-          }
-          <FaRegHeart className="cursor-pointer" onClick={() => navigation('/wishlist')} />
+          {isLogin == null ? (
+            <FaRegUser
+              className="cursor-pointer"
+              onClick={() => navigation("/account")}
+            />
+          ) : (
+            <Link to={`user/${isLogin}`}>{isLogin}</Link>
+          )}
+          <FaRegHeart
+            className="cursor-pointer"
+            onClick={() => navigation("/wishlist")}
+          />
           <div className="relative">
             <span className="absolute -right-3 -top-3 bg-black h-5 w-5 rounded-full text-white text-center text-sm">
               1
@@ -94,39 +129,47 @@ const RegularMenu = () => {
               <IoClose size={30} onClick={closeCartBar} />
             </div>
             <div className="mt-5 space-y-3 h-[83%] overflow-y-scroll">
-              <div className="flex gap-5">
-                <div className="w-[110px] border border-gray-300">
-                  <img src={watch} className="w-full" alt="" />
-                </div>
-                <div className="flex flex-col gap-3">
-                  <h4>Classic Gold Link</h4>
-                  <h4>$175.00</h4>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center bg-[#eee] justify-between p-2 rounded gap-3">
-                      <FaMinus />
-                      <input type="number"  className="myinput w-5" />
-                      <FaPlus />
-                    </div>
-                    <div>
-                      <button className="relative before:absolute before:bottom-0 before:left-0 before:w-0 before:border before:duration-200 hover:before:w-full">
-                        remove
-                      </button>
+              {isLogin ? (
+                <div className="flex gap-5">
+                  <div className="w-[110px] border border-gray-300">
+                    <img src={watch} className="w-full" alt="" />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <h4>Classic Gold Link</h4>
+                    <h4>$175.00</h4>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center bg-[#eee] justify-between p-2 rounded gap-3">
+                        <FaMinus />
+                        <input type="number" className="myinput w-5" />
+                        <FaPlus />
+                      </div>
+                      <div>
+                        <button className="relative before:absolute before:bottom-0 before:left-0 before:w-0 before:border before:duration-200 hover:before:w-full">
+                          remove
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+              ) : (
+                <h2 className="text-center mt-10 text-3xl" onClick={firstLogin}>Login First</h2>
+              )}
+            </div>
+          </div>
+          {isLogin ? (
+            <div className="flex flex-col mt-auto">
+              <div className="flex justify-between mb-3">
+                <h3 className="text-2xl">Subtotal</h3>
+                <h3 className="text-2xl">$175.00</h3>
+              </div>
+              <div className="flex flex-col">
+                <button className="bg-black text-white p-3">Check Out</button>
+                <button className="bg-white text-black p-3">View Cart</button>
               </div>
             </div>
-          </div>
-          <div className="flex flex-col mt-auto">
-            <div className="flex justify-between mb-3">
-              <h3 className="text-2xl">Subtotal</h3>
-              <h3 className="text-2xl">$175.00</h3>
-            </div>
-            <div className="flex flex-col">
-              <button className="bg-black text-white p-3">Check Out</button>
-              <button className="bg-white text-black p-3">View Cart</button>
-            </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </Wrapper>
