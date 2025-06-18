@@ -1,0 +1,84 @@
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+const PersonalInformation = () => {
+  const [user, setUser] = useState([]);
+
+  const fetchUser = async () => {
+    const response = await fetch("http://127.0.0.1:4000/api/users/getUser");
+    const final = await response.json();
+    setUser(final.users);
+  };
+
+  const location = useLocation();
+
+  const navigation = useNavigate()
+
+  const filterUser = user.filter(
+    (fil) => fil.email == location.pathname.slice(6)
+  );
+
+  const handleDeleteAccount = async (email) => {
+    const response = await fetch("http://127.0.0.1:4000/api/users/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    localStorage.removeItem('login')
+    navigation('/')
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('login')
+    navigation('/')
+  }
+
+  if (user.length == 0) {
+    return "No User Are Login";
+  }
+
+  return (
+    <div>
+      <div className="shadow-sm p-3">
+        <div>
+          <h2>Personal Information</h2>
+          <div className="flex gap-3 mt-2">
+            <h2 className="border border-gray-300 pe-10 ps-2 py-1">
+              {filterUser[0].fname}
+            </h2>
+            <h2 className="border border-gray-300 pe-10 ps-2 py-1">
+              {filterUser[0].lname}
+            </h2>
+          </div>
+        </div>
+        <div className="mt-4">
+          <h2>Email Address</h2>
+          <div className="flex mt-2">
+            <h2 className="border border-gray-300 pe-10 ps-2 py-1">
+              {filterUser[0].email}
+            </h2>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-col gap-2 text-left">
+          <button onClick={handleLogout} className="text-left">Logout</button>
+          <button
+            className="text-red-600 text-left"
+            onClick={() => handleDeleteAccount(location.pathname.slice(6))}
+          >
+            Delete Account
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PersonalInformation;

@@ -14,7 +14,8 @@ const UserSchema = new mongoose.Schema(
     isVerified: { type: Boolean, default: false },
     cart: { type: [String] },
     otp: { type: Number },
-    isSignIn : {type : Boolean , default : false}
+    isSignIn: { type: Boolean, default: false },
+    addresses: { type: [String] },
   },
   {
     timestamps: true,

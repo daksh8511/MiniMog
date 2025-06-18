@@ -6,6 +6,7 @@ import ProductRoutes from './routes/ProductRoutes.js'
 import UserController from './controller/UserController.js'
 import FilterProductRoutes from './routes/FilterProductRoutes.js'
 import cookieParser from 'cookie-parser'
+import AddressRoutes from './routes/AddressRoutes.js'
 
 const app = express()
 
@@ -18,6 +19,8 @@ app.use(cookieParser())
 app.use('/api/post-product', ProductRoutes)
 app.use('/api/users', UserController)
 app.use('/api/watch', FilterProductRoutes)
+
+app.use('/api/address', AddressRoutes)
 
 app.listen(4000, ()=>{
     console.log("Server Start")

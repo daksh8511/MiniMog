@@ -1,37 +1,34 @@
-import React, { use, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-
+import { useState } from "react";
+import ManageAddress from "../../Components/ManageAddress/ManageAddress";
+import PersonalInformation from "../../Components/PersonalInformation/PersonalInformation";
 
 const User = () => {
-//   const [user, setUser] = useState([]);
 
-//   const fetchData = async () => {
-//     const response = await fetch("http://127.0.0.1:4000/api/users/getUser");
-//     const final = await response.json();
-//     setUser(final.users);
-//   };
+  const [tabActive, setTabActive] = useState('personal information')
 
-//   const location = useLocation();
-
-//   const filteruser = user.filter(
-//     (fil) => fil.email == location.pathname.slice(6)
-//   );
-
-//   console.log(filteruser);
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-  return <div>
-    <div>
-        <h2 className="text-center text-4xl">Hello, User</h2>
-
-        <div>
-            img
+  return (
+    <div className="flex gap-5">
+      {/* LEFT SIDE */}
+      <div className="w-1/4">
+        <div className="shadow-sm p-2">
+          <span>Hello,</span>
+          <h2>Daksh Sathwara</h2>
         </div>
+        <ul className="p-2 shadow-sm mt-5 *:my-2">
+          <li className={tabActive == 'personal information' ? 'hover:border-l-2 border-l-2 hover:ps-1 ps-1' : 'cursor-pointer'} onClick={() => setTabActive('personal information')}>Personal Information</li>
+          <li className={tabActive == 'manage address' ? 'hover:border-l border-l-2 ps-1' : 'cursor-pointer'} onClick={() => setTabActive('manage address')}>Manage Address</li>
+        </ul>
+      </div>
+      <div className="w-3/4">
+        <div className={tabActive == 'personal information' ? 'block' : 'hidden'}>
+          <PersonalInformation />
+        </div>
+        <div className={tabActive == 'manage address' ? 'block' : 'hidden'}>
+          <ManageAddress />
+        </div>
+      </div>
     </div>
-  </div>;
+  );
 };
 
 export default User;

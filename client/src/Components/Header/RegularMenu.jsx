@@ -27,8 +27,6 @@ const RegularMenu = () => {
 
   const isLogin = JSON.parse(localStorage.getItem('login'))
 
-  console.log(isLogin == null) 
-
   const openCartBar = () => {
     setCartBar(true);
     BgRef.current.style.background = "#37373780"

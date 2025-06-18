@@ -105,3 +105,17 @@ export const SignIn = async (req, res) => {
     return res.json({ success: false, message: error });
   }
 };
+
+export const DeleteAccount = async (req, res) => {
+  const {email} = req.body
+
+  try {
+    const User = await UserModel.findOneAndDelete({email})
+
+    await User.save()
+
+    return res.json({success : true, message : "Account Delete Successfully"})
+  } catch (error) {
+    return res.json({success : false, message : error})
+  }
+}

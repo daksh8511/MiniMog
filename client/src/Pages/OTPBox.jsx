@@ -18,7 +18,7 @@ const OTPBox = () => {
 
     if (user[0].otp == otp) {
       alert("OTP Verified");
-      navigation("/");
+      navigation("/account");
     } else {
       alert("OTP are Not match");
     }
