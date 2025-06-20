@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const PersonalInformation = () => {
   const [user, setUser] = useState([]);
@@ -42,6 +42,23 @@ const PersonalInformation = () => {
     navigation('/')
   }
 
+  const becomeASeller = async() => {
+    const getEmail = JSON.parse(localStorage.getItem('login'))
+    const response = await fetch('http://127.0.0.1:4000/api/users/seller',{
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json"
+      },
+      body : JSON.stringify({
+        email : getEmail,
+      })
+    })
+
+    const data = await response.json()
+    console.log(data)
+    navigation('/adding')
+  }
+
   if (user.length == 0) {
     return "No User Are Login";
   }
@@ -70,9 +87,10 @@ const PersonalInformation = () => {
         </div>
 
         <div className="mt-4 flex flex-col gap-2 text-left">
-          <button onClick={handleLogout} className="text-left">Logout</button>
+          <Link onClick={() => {becomeASeller()}} className="text-left my-2 cursor-pointer">Become A Seller</Link>
+          <button onClick={handleLogout} className="text-left cursor-pointer">Logout</button>
           <button
-            className="text-red-600 text-left"
+            className="text-red-600 text-left cursor-pointer"
             onClick={() => handleDeleteAccount(location.pathname.slice(6))}
           >
             Delete Account

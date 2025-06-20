@@ -7,7 +7,7 @@ import { setInputs } from "../../../reducers/InputBoxSlices";
 
 const InputBox = () => {
   const [product_name, setProductName] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(0);
   const [ideal_for, setIdealFor] = useState("");
   const [typeOfGood, setTypeOfGood] = useState("");
   const [stock, setStock] = useState(0);
@@ -33,7 +33,7 @@ const InputBox = () => {
         onChange={(e) => setProductName(e.target.value)}
       />
       <input
-        type="text"
+        type="number"
         placeholder="Enter Price"
         value={price}
         onChange={(e) => setPrice(e.target.value)}

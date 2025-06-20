@@ -1,21 +1,14 @@
-import React, { use, useEffect, useRef, useState } from "react";
-import { IoSearch } from "react-icons/io5";
-import { FaRegUser } from "react-icons/fa6";
-import { FaRegHeart } from "react-icons/fa6";
+import React, { useEffect, useRef, useState } from "react";
+import { IoSearch, IoClose } from "react-icons/io5";
+import { FaRegUser, FaRegHeart, FaPlus, FaMinus } from "react-icons/fa6";
 import { PiHandbagBold } from "react-icons/pi";
 import { Assets } from "../../../public/icons/Icons";
-
 import styled from "styled-components";
 import HomeMenu from "../Menu/HomeMenu";
 import ShopMenu from "../Menu/ShopMenu";
 import ProductsMenu from "../Menu/ProductsMenu";
 import PageMenu from "../Menu/PageMenu";
 import FoxkitMenu from "../Menu/FoxkitMenu";
-
-import { FaPlus, FaMinus } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
-
-import watch from "/assets/watch.jpg";
 import { Link, useNavigate } from "react-router-dom";
 
 const RegularMenu = () => {
@@ -25,8 +18,10 @@ const RegularMenu = () => {
 
   const isLogin = JSON.parse(localStorage.getItem("login"));
 
-  const [user, setUser] = useState('')
-  const [allProducts, setAllProducts] = useState([])
+  const [user, setUser] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const openCartBar = () => {
     setCartBar(true);
@@ -41,31 +36,73 @@ const RegularMenu = () => {
   };
 
   const firstLogin = () => {
-    setCartBar(false)
+    setCartBar(false);
     BgRef.current.style.background = "";
     BgRef.current.style.height = "0vh";
-    navigation('/account')
+    navigation("/account");
+  };
+
+  const handleCartButton = () => {
+    setCartBar(false);
+    BgRef.current.style.background = "";
+    BgRef.current.style.height = "0vh";
   }
 
   const fetchUser = async () => {
-    const response = await fetch('http://127.0.0.1:4000/api/users/getPerson?getEmail=daxsathwara102@gmail.com')
-    const final = await response.json()
-    setUser(final.data)
-  }
+    const response = await fetch(
+      "http://127.0.0.1:4000/api/users/getPerson?getEmail=daxsathwara102@gmail.com"
+    );
+    const final = await response.json();
+    setUser(final.data);
+  };
 
   const fetchProducts = async () => {
-    const response = await fetch('http://127.0.0.1:4000/api/post-product/product-getting')
-    const final = await response.json()
-    setAllProducts(final.products)
+    const response = await fetch(
+      "http://127.0.0.1:4000/api/post-product/product-getting"
+    );
+    const final = await response.json();
+    setAllProducts(final.products);
+  };
+
+  const removeFromCart = async(product) => {
+    const getEmail = JSON.parse(localStorage.getItem('login'))
+    const response = await fetch('http://127.0.0.1:4000/api/cart/removeFromCart',{
+      method : "POST",
+      headers : {
+        "Content-Type" : 'application/json'
+      },
+      body : JSON.stringify({
+        email : getEmail,
+        product : product._id
+      })
+    })
+
+    const data = await response.json()
+    console.log(data)
   }
 
-  const getProductsById = user[0]?.cart.filter((fil) => fil == allProducts)
-  console.log(getProductsById)
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchUser();
+      await fetchProducts();
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+
+  const finded = allProducts.filter((products) => user[0].cart.includes(products._id))
+
+  const subtotal = finded.reduce((acc, cv) => acc + cv.price, 0)
+
 
   useEffect(() => {
-    fetchUser()
-    fetchProducts()
-  }, [])
+    if (user.length === 0 || allProducts.length === 0) return;
+    const filtered = allProducts.filter((product) =>
+      user[0].cart.includes(product._id)
+    );
+    setCart(filtered);
+  }, [user, allProducts]);
 
 
   return (
@@ -97,7 +134,7 @@ const RegularMenu = () => {
           />
           <div className="relative">
             <span className="absolute -right-3 -top-3 bg-black h-5 w-5 rounded-full text-white text-center text-sm">
-              1
+              {cart.length}
             </span>
             <PiHandbagBold className="cursor-pointer" onClick={openCartBar} />
           </div>
@@ -129,46 +166,57 @@ const RegularMenu = () => {
               <IoClose size={30} onClick={closeCartBar} />
             </div>
             <div className="mt-5 space-y-3 h-[83%] overflow-y-scroll">
-              {isLogin ? (
-                <div className="flex gap-5">
-                  <div className="w-[110px] border border-gray-300">
-                    <img src={watch} className="w-full" alt="" />
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <h4>Classic Gold Link</h4>
-                    <h4>$175.00</h4>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center bg-[#eee] justify-between p-2 rounded gap-3">
-                        <FaMinus />
-                        <input type="number" className="myinput w-5" />
-                        <FaPlus />
+              {loading ? (
+                <h2 className="text-center mt-10 text-xl text-gray-600">
+                  Loading cart...
+                </h2>
+              ) : isLogin ? (
+                cart.length > 0 ? (
+                  cart.map((item, index) => (
+                    <div key={index} className="flex gap-5 border-b pb-3">
+                      <div className="w-[110px] border border-gray-300">
+                        <img
+                          src={item.product_images[0]}
+                          className="w-full p-4"
+                          alt={item.name}
+                        />
                       </div>
-                      <div>
-                        <button className="relative before:absolute before:bottom-0 before:left-0 before:w-0 before:border before:duration-200 hover:before:w-full">
+                      <div className="flex flex-col gap-3">
+                        <h4>{item.product_name}</h4>
+                        <h4>${item.price}</h4>
+
+                        <button onClick={() => removeFromCart(item)} className="relative w-10 text-left before:absolute before:bottom-0 before:left-0 before:w-0 before:border before:duration-200 hover:before:w-full">
                           remove
                         </button>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  ))
+                ) : (
+                  <h2 className="text-center mt-10 text-xl text-gray-600">
+                    Your cart is empty.
+                  </h2>
+                )
               ) : (
-                <h2 className="text-center mt-10 text-3xl" onClick={firstLogin}>Login First</h2>
+                <h2
+                  className="text-center mt-10 text-3xl cursor-pointer"
+                  onClick={firstLogin}
+                >
+                  Login First
+                </h2>
               )}
             </div>
           </div>
-          {isLogin ? (
+          {isLogin && cart.length > 0 && (
             <div className="flex flex-col mt-auto">
               <div className="flex justify-between mb-3">
                 <h3 className="text-2xl">Subtotal</h3>
-                <h3 className="text-2xl">$175.00</h3>
+                <h3 className="text-2xl">${subtotal}</h3>
               </div>
               <div className="flex flex-col">
-                <button className="bg-black text-white p-3">Check Out</button>
-                <button className="bg-white text-black p-3">View Cart</button>
+                <Link className="bg-black text-white p-3 text-center">Check Out</Link>
+                <Link to={'/cart'} onClick={handleCartButton} className="bg-white text-black p-3 text-center">View Cart</Link>
               </div>
             </div>
-          ) : (
-            ""
           )}
         </div>
       </div>

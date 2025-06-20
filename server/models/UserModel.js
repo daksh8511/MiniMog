@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
     otp: { type: Number },
     isSignIn: { type: Boolean, default: false },
     addresses: { type: [String] },
+    isSellere: { type: String, default: false },
   },
   {
     timestamps: true,

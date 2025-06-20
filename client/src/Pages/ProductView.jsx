@@ -57,7 +57,7 @@ const ProductView = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: getEmail, productsId: product._id }),
+        body: JSON.stringify({ email: getEmail, productsId: product }),
       });
 
       const data = await response.json();

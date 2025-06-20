@@ -119,3 +119,18 @@ export const DeleteAccount = async (req, res) => {
     return res.json({success : false, message : error})
   }
 }
+
+export const BecomeASeller = async (req, res) => {
+  const {email} = req.body
+
+  try {
+    const User = await UserModel.findOneAndUpdate({'email' : email},{$set : {'isSellere' : true}})
+
+    await User.save()
+
+    return res.json({success : true, message : "You are now seller"})
+
+  } catch (error) {
+    return res.json({success : false, message : error})
+  }
+}

@@ -4,9 +4,12 @@ import InputBox from "./InputBox/InputBox";
 import ColorSection from "./box/ColorSection";
 import ProductImage from "./box/ProductImage";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AddingProduct = () => {
   const [description, setDescription] = useState("");
+
+  const navigation = useNavigate('')
 
   const inputSelector = useSelector((state) => {
     if (state.inputSlice[0] == undefined) {
@@ -49,6 +52,8 @@ const AddingProduct = () => {
     })
       .then((succ) => console.log("successfully added"))
       .catch((err) => console.log(err));
+
+    navigation('/all_watches')
   };
 
 
